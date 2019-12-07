@@ -31,7 +31,7 @@ const config: Configuration = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [],
+  plugins: ['~/plugins/compositionApi'],
   /*
    ** Nuxt.js dev-modules
    */
