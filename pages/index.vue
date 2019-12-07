@@ -59,11 +59,12 @@
         </v-card-actions>
       </v-card>
     </v-flex>
+    SSR: {{ isSsr }}
   </v-layout>
 </template>
 
 <script lang="ts">
-import { createComponent } from '@vue/composition-api'
+import { createComponent, onServerPrefetch, ref } from '@vue/composition-api'
 import Logo from '~/components/Logo.vue'
 import VuetifyLogo from '~/components/VuetifyLogo.vue'
 
@@ -71,6 +72,16 @@ export default createComponent({
   components: {
     Logo,
     VuetifyLogo
+  },
+
+  setup() {
+    const isSsr = ref(false)
+
+    onServerPrefetch(() => {
+      isSsr.value = true
+    })
+
+    return { isSsr }
   }
 })
 </script>
