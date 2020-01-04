@@ -2,10 +2,14 @@
   <v-layout column justify-center align-center>
     <h2>google photo</h2>
     <v-flex>
-      <template v-if="me.name"> こんにちは、{{ me.name }} さん </template>
-      <template v-else>ログインしていません。</template>
+      <template v-if="me.name">
+        こんにちは、{{ me.name }} <img :src="me.imageUrl" /> さん
+        <v-btn @click="signout">Sign Out</v-btn>
+      </template>
+      <template v-else>
+        <v-btn @click="authenticate">Sign In</v-btn>
+      </template>
     </v-flex>
-    <v-btn @click="authenticate">authenticate</v-btn>
     <v-btn @click="search">search</v-btn>
   </v-layout>
 </template>
@@ -24,24 +28,39 @@ interface UseGapiAuth2Args {
 const useGapiAuth2 = ({ clientId, scope }: UseGapiAuth2Args) => {
   const me = reactive({ name: '', imageUrl: '' })
 
-  const setMe = (googleUser: gapi.auth2.GoogleUser) => {
-    const profile = googleUser.getBasicProfile()
+  const setMe = () => {
+    const { isSignedIn, currentUser } = gapi.auth2.getAuthInstance()
+
+    if (!isSignedIn.get()) {
+      me.name = ''
+      me.imageUrl = ''
+      return
+    }
+
+    const profile = currentUser.get().getBasicProfile()
     me.name = profile.getName()
     me.imageUrl = profile.getImageUrl()
   }
 
-  const authenticate = async () => {
-    const resp = await gapi.auth2.getAuthInstance().signIn({ scope })
-    setMe(resp)
+  const authenticate = () => {
+    gapi.auth2.getAuthInstance().signIn({ scope })
+  }
+
+  const signout = () => {
+    gapi.auth2.getAuthInstance().signOut()
   }
 
   onMounted(() => {
     gapi.load('client:auth2', () => {
-      gapi.auth2.init({ client_id: clientId }).currentUser.listen(setMe)
+      const { isSignedIn, currentUser } = gapi.auth2.init({
+        client_id: clientId
+      })
+      isSignedIn.listen(setMe)
+      currentUser.listen(setMe)
     })
   })
 
-  return { me, authenticate }
+  return { me, authenticate, signout }
 }
 
 const useGapiPhotos = () => {
@@ -83,14 +102,14 @@ export default createComponent({
   },
 
   setup() {
-    const { me, authenticate } = useGapiAuth2({
+    const { me, authenticate, signout } = useGapiAuth2({
       clientId: CLIENT_ID,
       scope: 'https://www.googleapis.com/auth/photoslibrary.readonly'
     })
 
     const { search } = useGapiPhotos()
 
-    return { me, authenticate, search }
+    return { me, authenticate, signout, search }
   }
 })
 </script>
