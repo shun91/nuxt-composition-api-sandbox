@@ -5,12 +5,12 @@
       <template v-if="me.name">
         こんにちは、{{ me.name }} <img :src="me.imageUrl" /> さん
         <v-btn @click="signout">Sign Out</v-btn>
+        <v-btn @click="search">search</v-btn>
       </template>
       <template v-else>
-        <v-btn @click="authenticate">Sign In</v-btn>
+        <v-btn @click="signIn">Sign In</v-btn>
       </template>
     </v-flex>
-    <v-btn @click="search">search</v-btn>
   </v-layout>
 </template>
 
@@ -42,7 +42,7 @@ const useGapiAuth2 = ({ clientId, scope }: UseGapiAuth2Args) => {
     me.imageUrl = profile.getImageUrl()
   }
 
-  const authenticate = () => {
+  const signIn = () => {
     gapi.auth2.getAuthInstance().signIn({ scope })
   }
 
@@ -60,7 +60,7 @@ const useGapiAuth2 = ({ clientId, scope }: UseGapiAuth2Args) => {
     })
   })
 
-  return { me, authenticate, signout }
+  return { me, signIn, signout }
 }
 
 const useGapiPhotos = () => {
@@ -102,14 +102,14 @@ export default createComponent({
   },
 
   setup() {
-    const { me, authenticate, signout } = useGapiAuth2({
+    const { me, signIn, signout } = useGapiAuth2({
       clientId: CLIENT_ID,
       scope: 'https://www.googleapis.com/auth/photoslibrary.readonly'
     })
 
     const { search } = useGapiPhotos()
 
-    return { me, authenticate, signout, search }
+    return { me, signIn, signout, search }
   }
 })
 </script>
