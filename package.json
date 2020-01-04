@@ -9,7 +9,7 @@
     "build": "nuxt-ts build",
     "generate": "nuxt-ts generate",
     "start": "nuxt-ts start",
-    "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "lint": "eslint --ext .js,.ts,.vue --ignore-path .gitignore .",
     "test": "jest"
   },
   "lint-staged": {
@@ -29,9 +29,12 @@
   "devDependencies": {
     "@nuxt/typescript-build": "^0.3.10",
     "@nuxtjs/eslint-config": "^1.0.1",
+    "@nuxtjs/eslint-config-typescript": "^1.0.0",
     "@nuxtjs/vuetify": "^1.0.0",
+    "@types/gapi": "^0.0.39",
+    "@types/gapi.auth2": "^0.0.51",
+    "@types/gapi.client.photoslibrary": "^1.0.0",
     "@vue/test-utils": "^1.0.0-beta.27",
-    "babel-eslint": "^10.0.1",
     "babel-jest": "^24.1.0",
     "eslint": "^6.1.0",
     "eslint-config-prettier": "^4.1.0",

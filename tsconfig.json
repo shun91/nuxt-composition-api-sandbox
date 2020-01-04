@@ -14,7 +14,7 @@
       "~/*": ["./*"],
       "@/*": ["./*"]
     },
-    "types": ["@types/node", "@nuxt/types", "./"]
+    "types": ["@types/node", "@nuxt/types", "@types/gapi.auth2", "@types/gapi.client.photoslibrary", "./"]
   },
   "exclude": ["node_modules"]
 }
